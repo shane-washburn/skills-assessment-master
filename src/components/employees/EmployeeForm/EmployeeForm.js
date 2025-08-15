@@ -8,9 +8,9 @@ import './EmployeeForm.scss';
 const validatePassword = (password) => {
   return {
     minLength: password.length >= 8,
-    hasNumber: /[0-9]/.test(password),
-    hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
-    hasUpperCase: /[A-Z]/.test(password)
+    hasNumber: /\d/.test(password),
+    hasUpperCase: /[A-Z]/.test(password),
+    hasLowerCase: /[a-z]/.test(password)
   };
 };
 
@@ -26,7 +26,12 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [passwordsMatch, setPasswordsMatch] = useState(true);
   const handlePasswordValidation = (validation) => {
-    setIsPasswordValid(validation.isValid);
+    const isValid = validation.minLength && 
+                   validation.hasNumber && 
+                   validation.hasUpperCase && 
+                   validation.hasLowerCase;
+    
+    setIsPasswordValid(isValid);
     setPasswordValidation(prev => ({
       ...prev,
       ...validation,
@@ -124,8 +129,17 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
     setErrors(newErrors);
 
     // Check if form is valid
-    const isFormValid = !Object.values(newErrors).some(error => error) && 
-                       (formData.password === '' || (isPasswordValid && doPasswordsMatch));
+    const currentPasswordValidation = formData.password ? validatePassword(formData.password) : 
+      { minLength: true, hasNumber: true, hasUpperCase: true, hasLowerCase: true };
+    
+    const passwordValid = formData.password === '' || 
+                         (currentPasswordValidation.minLength &&
+                          currentPasswordValidation.hasNumber &&
+                          currentPasswordValidation.hasUpperCase &&
+                          currentPasswordValidation.hasLowerCase &&
+                          doPasswordsMatch);
+    
+    const isFormValid = !Object.values(newErrors).some(error => error) && passwordValid;
 
     if (isFormValid) {
       // If password is empty, don't include it in the submission
