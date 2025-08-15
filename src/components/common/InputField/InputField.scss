@@ -9,6 +9,7 @@
     align-items: center;
     margin-bottom: 4px;
     gap: 4px;
+    min-height: 16px; /* Reserve space for the error icon */
   }
 
   &__label {
@@ -29,6 +30,14 @@
     flex-shrink: 0;
     color: #d32f2f; // This will make the SVG inherit the red color
     margin-right: 4px;
+    visibility: hidden; /* Hide by default */
+    opacity: 0;
+    transition: opacity 0.2s ease;
+
+    &--visible {
+      visibility: visible;
+      opacity: 1;
+    }
   }
 
   &__wrapper {

@@ -40,23 +40,22 @@ const InputField = ({
     <div className={`input-field ${className} ${error ? 'input-field--error' : ''}`}>
       {label && !hideLabel && (
         <div className="input-field__label-container">
-          {error && (
-            <svg 
-              className="input-field__error-icon" 
-              width="16" 
-              height="16" 
-              viewBox="0 0 14 14" 
-              fill="none" 
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path 
-                fillRule="evenodd" 
-                clipRule="evenodd" 
-                d="M7 0C3.13382 0 0 3.13413 0 7C0 10.8662 3.13382 14 7 14C10.8659 14 14 10.8662 14 7C14 3.13413 10.8659 0 7 0ZM6.11644 3.60547C6.11644 3.11842 6.5128 2.72222 7 2.72222C7.4872 2.72222 7.88356 3.11842 7.88356 3.60547V7.54242C7.88356 8.02947 7.4872 8.42567 7 8.42567C6.5128 8.42567 6.11644 8.02947 6.11644 7.54242V3.60547ZM5.992 10.2699C5.992 10.8256 6.44436 11.2778 7 11.2778C7.55596 11.2778 8.008 10.8256 8.008 10.2699C8.008 9.71367 7.55596 9.26147 7 9.26147C6.44436 9.26147 5.992 9.71367 5.992 10.2699Z" 
-                fill="currentColor"
-              />
-            </svg>
-          )}
+          <svg 
+            className={`input-field__error-icon ${error ? 'input-field__error-icon--visible' : ''}`} 
+            width="16" 
+            height="16" 
+            viewBox="0 0 14 14" 
+            fill="none" 
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden={!error}
+          >
+            <path 
+              fillRule="evenodd" 
+              clipRule="evenodd" 
+              d="M7 0C3.13382 0 0 3.13413 0 7C0 10.8662 3.13382 14 7 14C10.8659 14 14 10.8662 14 7C14 3.13413 10.8659 0 7 0ZM6.11644 3.60547C6.11644 3.11842 6.5128 2.72222 7 2.72222C7.4872 2.72222 7.88356 3.11842 7.88356 3.60547V7.54242C7.88356 8.02947 7.4872 8.42567 7 8.42567C6.5128 8.42567 6.11644 8.02947 6.11644 7.54242V3.60547ZM5.992 10.2699C5.992 10.8256 6.44436 11.2778 7 11.2778C7.55596 11.2778 8.008 10.8256 8.008 10.2699C8.008 9.71367 7.55596 9.26147 7 9.26147C6.44436 9.26147 5.992 9.71367 5.992 10.2699Z" 
+              fill="currentColor"
+            />
+          </svg>
           <label htmlFor={id || name} className={labelClasses}>
             {label}
           </label>
@@ -81,7 +80,11 @@ const InputField = ({
           {...props}
         />
       </div>
-      {error && <div className="input-field__error">{error}</div>}
+      {error && error.trim() !== '' && (
+        <div className="input-field__error">
+          {error}
+        </div>
+      )}
     </div>
   );
 };

@@ -2,6 +2,7 @@
   margin-left: 16px;
   &__section {
     margin-bottom: 0;
+    padding-top: 16px;
     
     &:last-child {
       margin-bottom: 0;
@@ -72,6 +73,8 @@
     width: 300px;
     display: flex;
     flex-direction: column;
+    gap: 0; /* No gap between fields */
+    padding-top: 4px; /* Maintain top padding for alignment */
   }
   
   &__requirements-col {
@@ -80,7 +83,7 @@
   
   &__requirements-box {
     width: 100%;
-    padding-top: 24px;
+    padding-top: 20px;
     
     h5 {
       margin: 0 0 8px 0;
@@ -108,6 +111,29 @@
 
   &__password-field {
     width: 100%;
+    position: relative;
+    min-height: 64px; /* Height of input + space for error message */
+    
+    .input-field {
+      &__error {
+        position: absolute;
+        top: calc(100% + 4px);
+        left: 0;
+        right: 0;
+        color: #d32f2f;
+        font-size: 12px;
+        line-height: 1.2;
+        opacity: 0;
+        height: 16px; /* Fixed height for error message */
+        visibility: hidden;
+        transition: opacity 0.2s ease;
+        
+        &:not(:empty) {
+          opacity: 1;
+          visibility: visible;
+        }
+      }
+    }
   }
 
   &__divider {
@@ -133,7 +159,9 @@
     
     &__input {
       width: 100%;
+      height: 40px;
       padding: 8px 12px !important;
+      box-sizing: border-box;
       
       &--with-icon {
         padding-right: 36px !important;
@@ -150,4 +178,3 @@
       max-width: 100%;
     }
   }
-
