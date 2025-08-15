@@ -74,14 +74,26 @@ const PasswordField = ({
 }) => {
   const [touched, setTouched] = useState(false);
   const validation = React.useMemo(() => validatePassword(value), [value]);
-  const prevIsValidRef = React.useRef();
+  const prevValidationRef = React.useRef(validation);
 
   useEffect(() => {
-    if (onValidationChange && prevIsValidRef.current !== validation.isValid) {
-      prevIsValidRef.current = validation.isValid;
-      onValidationChange(validation.isValid);
+    // Only call onValidationChange if validation has actually changed
+    if (onValidationChange && 
+        (prevValidationRef.current.minLength !== validation.minLength ||
+         prevValidationRef.current.hasNumber !== validation.hasNumber ||
+         prevValidationRef.current.hasUpperCase !== validation.hasUpperCase ||
+         prevValidationRef.current.hasLowerCase !== validation.hasLowerCase)) {
+      
+      onValidationChange({
+        minLength: validation.minLength,
+        hasNumber: validation.hasNumber,
+        hasUpperCase: validation.hasUpperCase,
+        hasLowerCase: validation.hasLowerCase
+      });
+      
+      prevValidationRef.current = {...validation};
     }
-  }, [validation.isValid, onValidationChange]);
+  }, [validation, onValidationChange]);
 
   const handleBlur = () => {
     setTouched(true);

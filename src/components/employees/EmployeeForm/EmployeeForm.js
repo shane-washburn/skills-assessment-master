@@ -25,20 +25,32 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
   const [errors, setErrors] = useState({});
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [passwordsMatch, setPasswordsMatch] = useState(true);
-  const handlePasswordValidation = (validation) => {
+  const handlePasswordValidation = React.useCallback((validation) => {
     const isValid = validation.minLength && 
                    validation.hasNumber && 
                    validation.hasUpperCase && 
                    validation.hasLowerCase;
     
     setIsPasswordValid(isValid);
-    setPasswordValidation(prev => ({
-      ...prev,
-      ...validation,
-      // Don't override passwordsMatch
-      passwordsMatch: prev.passwordsMatch
-    }));
-  };
+    
+    setPasswordValidation(prev => {
+      const passwordsMatch = !formData.confirmPassword || formData.password === formData.confirmPassword;
+      // Only update if something actually changed
+      if (prev.minLength === validation.minLength &&
+          prev.hasNumber === validation.hasNumber &&
+          prev.hasUpperCase === validation.hasUpperCase &&
+          prev.hasLowerCase === validation.hasLowerCase &&
+          prev.passwordsMatch === passwordsMatch) {
+        return prev;
+      }
+      
+      return {
+        ...prev,
+        ...validation,
+        passwordsMatch: passwordsMatch
+      };
+    });
+  }, [formData.password, formData.confirmPassword]);
   const [passwordValidation, setPasswordValidation] = useState({
     minLength: false,
     hasNumber: false,
@@ -105,14 +117,21 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
     }
   };
 
-  const validatePasswordsMatch = (password, confirmPassword) => {
+  const validatePasswordsMatch = React.useCallback((password, confirmPassword) => {
     const match = !password || !confirmPassword || password === confirmPassword;
-    setPasswordValidation(prev => ({
-      ...prev,
-      passwordsMatch: match
-    }));
+    
+    setPasswordValidation(prev => {
+      if (prev.passwordsMatch === match) return prev;
+      
+      return {
+        ...prev,
+        passwordsMatch: match
+      };
+    });
+    
+    setPasswordsMatch(match);
     return match;
-  };
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -139,16 +158,18 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
 
     setErrors(newErrors);
 
-    // Check if form is valid
+    // Always validate password if password field is not empty
     const currentPasswordValidation = formData.password ? validatePassword(formData.password) : 
       { minLength: true, hasNumber: true, hasUpperCase: true, hasLowerCase: true };
     
+    // If password is being set (not empty), all conditions must be met
     const passwordValid = formData.password === '' || 
                          (currentPasswordValidation.minLength &&
                           currentPasswordValidation.hasNumber &&
                           currentPasswordValidation.hasUpperCase &&
                           currentPasswordValidation.hasLowerCase &&
-                          doPasswordsMatch);
+                          doPasswordsMatch &&
+                          formData.password === formData.confirmPassword);
     
     const isFormValid = !Object.values(newErrors).some(error => error) && passwordValid;
 
@@ -243,7 +264,14 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
                   }));
                   validatePasswordsMatch(formData.password, newConfirmPassword);
                 }}
-                error={isSubmitting && ((!passwordsMatch && formData.confirmPassword) || (formData.password && !isPasswordValid)) ? ' ' : ''}
+                error={
+                  isSubmitting && formData.confirmPassword && (
+                    (formData.password && !passwordsMatch) || 
+                    (formData.password && !isPasswordValid)
+                  )
+                    ? ' ' // Single space to maintain error state without showing message
+                    : ''
+                }
                 autoComplete="new-password"
               >
                 <KeyCheckIcon className="input-field__icon" />
