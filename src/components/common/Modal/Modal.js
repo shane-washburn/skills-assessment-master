@@ -59,8 +59,8 @@ const Modal = ({ isOpen, onClose, title, children, userName }) => {
   if (!isOpen) return null;
 
   return ReactDOM.createPortal(
-    <div className="modal-overlay" onClick={onClose}>
-      <div className="modal" onClick={(e) => e.stopPropagation()}>
+    <div className="modal-overlay">
+      <div className="modal">
         <div className="modal__header">
           <h3 className="modal__title">{title}</h3>
           <CloseIcon className="modal__close" onClick={onClose} />
