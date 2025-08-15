@@ -5,15 +5,15 @@ import PasswordRequirements from './PasswordRequirements';
 const validatePassword = (password) => {
   const minLength = password.length >= 8;
   const hasNumber = /[0-9]/.test(password);
-  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
   const hasUpperCase = /[A-Z]/.test(password);
+  const hasLowerCase = /[a-z]/.test(password);
   
   return {
-    isValid: minLength && hasNumber && hasSpecialChar && hasUpperCase,
+    isValid: minLength && hasNumber && hasUpperCase && hasLowerCase,
     minLength,
     hasNumber,
-    hasSpecialChar,
-    hasUpperCase
+    hasUpperCase,
+    hasLowerCase
   };
 };
 
@@ -24,7 +24,6 @@ const PasswordField = ({
   onValidationChange
 }) => {
   const [touched, setTouched] = useState(false);
-  const [showRequirements, setShowRequirements] = useState(false);
   const validation = validatePassword(value);
 
   useEffect(() => {
@@ -33,13 +32,8 @@ const PasswordField = ({
     }
   }, [validation.isValid, onValidationChange]);
 
-  const handleFocus = () => {
-    setShowRequirements(true);
-  };
-
   const handleBlur = () => {
     setTouched(true);
-    setShowRequirements(false);
   };
 
   const shouldShowError = showValidation && touched && value && !validation.isValid;
@@ -49,20 +43,14 @@ const PasswordField = ({
       <InputField
         type="password"
         id="password"
-        label="Update Password (optional)"
-        placeholder="Enter new password"
+        label="Password"
+        placeholder=""
         value={value}
         onChange={onChange}
-        onFocus={handleFocus}
         onBlur={handleBlur}
         error={shouldShowError ? 'Please enter a valid password' : ''}
       />
       
-      {showRequirements && (
-        <div className="password-field__requirements">
-          <PasswordRequirements validation={validation} />
-        </div>
-      )}
     </div>
   );
 };

@@ -2,10 +2,11 @@ import React from 'react';
 import './PasswordRequirements.scss';
 
 const requirements = [
-  { key: 'minLength', text: 'At least 8 characters' },
-  { key: 'hasNumber', text: 'Contains a number' },
-  { key: 'hasSpecialChar', text: 'Contains a special character' },
-  { key: 'hasUpperCase', text: 'Contains an uppercase letter' },
+  { key: 'minLength', text: '8 or more characters' },
+  { key: 'hasNumber', text: 'At least 1 number' },
+  { key: 'hasUpperCase', text: 'Uppercase' },
+  { key: 'hasLowerCase', text: 'Lowercase' },
+  { key: 'passwordsMatch', text: 'Passwords match' },
 ];
 
 const PasswordRequirements = ({ validation }) => {

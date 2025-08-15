@@ -49,21 +49,30 @@
   }
 
   &__close {
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23666666' d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E") center / 24px 24px no-repeat;
+    background: none;
     border: none;
     width: 24px;
     height: 24px;
     cursor: pointer;
-    padding: 0;
-    margin: 0;
-    opacity: 1;
-    text-indent: -9999px;
-    overflow: hidden;
-    outline: none;
+    padding: 5px;
+    margin: 0 0 0 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666; // Gray color for X icon
+    transition: color 0.2s ease;
+    
+    svg {
+      width: 14px;
+      height: 14px;
+      
+      path {
+        fill: currentColor;
+      }
+    }
     
     &:hover, &:active, &:focus {
-      opacity: 1;
-      background-color: transparent;
+      color: #333; // Slightly darker gray on hover
       outline: none;
     }
   }
@@ -81,27 +90,51 @@
       top: 2px;
       background-color: rgba(255, 255, 255, 0.15);
       gap: 15px;
-      border-bottom: 1px solid #f0f0f0;
       margin-bottom: 20px;
-    }
-    
+      position: relative;
+      
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 20px;
+        right: 20px;
+        height: 1px;
+        background-color: #f0f0f0;
+      }
+    }    
     &-body {
       padding: 0 20px 20px;
     }
   }
   
   &__user-icon {
-    width: 24px;
-    height: 24px;
-    background: url('../../../assets/people.svg') center / contain no-repeat;
-    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    width: 18px;
+    height: 15px;
+    color: #527A00; // Green color for people icon
+    margin-right: 8px;
+    
+    svg {
+      width: 100%;
+      height: 100%;
+      
+      path {
+        fill: currentColor;
+      }
+    }
   }
   
   &__user-name {
     margin: 0;
-    font-size: 16px;
-    font-weight: 500;
-    color: #333;
+    font-family: Lato;
+    font-weight: 600;
+    font-size: 18px;
+    line-height: 26px;
+    letter-spacing: 0px;
+    color: #4e4e4e;
+
   }
 }
 

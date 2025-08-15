@@ -25,6 +25,22 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
   const [errors, setErrors] = useState({});
   const [isPasswordValid, setIsPasswordValid] = useState(true);
   const [passwordsMatch, setPasswordsMatch] = useState(true);
+  const handlePasswordValidation = (validation) => {
+    setIsPasswordValid(validation.isValid);
+    setPasswordValidation(prev => ({
+      ...prev,
+      ...validation,
+      // Don't override passwordsMatch
+      passwordsMatch: prev.passwordsMatch
+    }));
+  };
+  const [passwordValidation, setPasswordValidation] = useState({
+    minLength: false,
+    hasNumber: false,
+    hasUpperCase: false,
+    hasLowerCase: false,
+    passwordsMatch: true
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isTouched, setIsTouched] = useState({
     firstName: false,
@@ -83,10 +99,12 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
   };
 
   const validatePasswordsMatch = (password, confirmPassword) => {
-    if (password || confirmPassword) {
-      return password === confirmPassword;
-    }
-    return true; // Both empty is considered valid
+    const match = !password || !confirmPassword || password === confirmPassword;
+    setPasswordValidation(prev => ({
+      ...prev,
+      passwordsMatch: match
+    }));
+    return match;
   };
 
   const handleSubmit = (e) => {
@@ -159,13 +177,20 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
             <div className="employee-form__password-field">
               <PasswordField
                 value={formData.password}
-                onChange={(e) => setFormData(prev => ({
-                  ...prev,
-                  password: e.target.value,
-                  confirmPassword: ''
-                }))}
+                onChange={(e) => {
+                  const newPassword = e.target.value;
+                  setFormData(prev => ({
+                    ...prev,
+                    password: newPassword,
+                    confirmPassword: ''
+                  }));
+                  // Re-validate confirm password when password changes
+                  if (formData.confirmPassword) {
+                    validatePasswordsMatch(newPassword, formData.confirmPassword);
+                  }
+                }}
                 showValidation={isSubmitting}
-                onValidationChange={setIsPasswordValid}
+                onValidationChange={handlePasswordValidation}
               />
             </div>
             <div className="employee-form__password-field">
@@ -175,10 +200,14 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
                 type="password"
                 label="Confirm Password"
                 value={formData.confirmPassword}
-                onChange={(e) => setFormData(prev => ({
-                  ...prev,
-                  confirmPassword: e.target.value
-                }))}
+                onChange={(e) => {
+                  const newConfirmPassword = e.target.value;
+                  setFormData(prev => ({
+                    ...prev,
+                    confirmPassword: newConfirmPassword
+                  }));
+                  validatePasswordsMatch(formData.password, newConfirmPassword);
+                }}
                 error={!passwordsMatch && formData.confirmPassword ? 'Passwords do not match' : ''}
                 autoComplete="new-password"
               />
@@ -186,7 +215,10 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
           </div>
           <div className="employee-form__requirements-col">
             <div className="employee-form__requirements-box">
-              <PasswordRequirements validation={validatePassword(formData.password)} />
+              <PasswordRequirements validation={{
+                ...validatePassword(formData.password),
+                passwordsMatch: formData.password === formData.confirmPassword || (!formData.password && !formData.confirmPassword)
+              }} />
             </div>
           </div>
         </div>
