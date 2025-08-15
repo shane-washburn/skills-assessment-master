@@ -35,6 +35,10 @@
     
     .input-field {
       width: 100%;
+      
+      &__input {
+        padding: 8px 12px !important;
+      }
     }
   }
 
@@ -107,17 +111,37 @@
   }
 
   &__divider {
-    height: 1px;
-    background-color: #e0e0e0;
+    height: 2px;
+    background: linear-gradient(90deg, #C0E94F 0.38%, #8CB712 99.59%);
     margin: 24px 0;
     width: 100%;
   }
 
-  .password-field {
+  .input-field {
     position: relative;
     width: 100%;
+    
+    &__icon {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 16px;
+      height: 16px;
+      z-index: 2;
+    }
+    
+    &__input {
+      width: 100%;
+      padding: 8px 12px !important;
+      
+      &--with-icon {
+        padding-right: 36px !important;
+      }
+    }
+  }
 
-    &__requirements {
+  &__requirements {
       margin-top: 8px;
       background-color: #f8f8f8;
       border-radius: 4px;
@@ -126,4 +150,4 @@
       max-width: 100%;
     }
   }
-}
+

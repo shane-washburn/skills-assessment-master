@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import InputField from '../../common/InputField/InputField';
-import PasswordField from './PasswordField';
+import PasswordField, {KeyIcon, KeyCheckIcon} from './PasswordField';
 import PasswordRequirements from './PasswordRequirements';
 import Button from '../../common/Button/Button';
 import './EmployeeForm.scss';
@@ -210,7 +210,9 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
                 }}
                 error={!passwordsMatch && formData.confirmPassword ? 'Passwords do not match' : ''}
                 autoComplete="new-password"
-              />
+              >
+                <KeyCheckIcon className="input-field__icon" />
+              </InputField>
             </div>
           </div>
           <div className="employee-form__requirements-col">

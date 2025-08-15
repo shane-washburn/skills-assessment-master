@@ -1,55 +1,106 @@
 .input-field {
+  display: flex;
+  flex-direction: column;
   margin-bottom: 16px;
   width: 100%;
 
   &__label {
-    display: block;
-    color: #555;
-    font-size: 14px;
-    font-weight: 400;
-    line-height: 20px;
     margin-bottom: 4px;
+    font-size: 14px;
+    color: #333;
+    font-weight: 500;
 
     &--error {
-      color: #c20b0b;
+      color: #d32f2f;
     }
   }
 
-  &__input {
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 2px;
-    color: #222;
-    font-size: 15px;
-    height: 34px;
-    line-height: 22px;
-    outline: none;
-    padding: 0 10px;
+  &__wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
     width: 100%;
-    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+
+  &__icon-wrapper {
+    position: absolute;
+    left: -8px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+  }
+
+  &__icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  &__input {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    width: 100%;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+    text-indent: 0;
 
     &:focus {
-      border-color: #82af13;
-      box-shadow: 0 0 0 2px rgba(192, 233, 79, 0.35);
+      outline: none;
+      border-color: #1976d2;
+      box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
     }
 
     &--error {
-      border-color: #c20b0b;
+      border-color: #d32f2f;
 
       &:focus {
-        border-color: #c20b0b;
-        box-shadow: 0 0 0 2px rgba(194, 11, 11, 0.15);
+        box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);
       }
     }
 
-    &::placeholder {
-      color: #999;
+    &--with-icon {
+      &[type="password"] {
+        padding-left: 40px;
+        letter-spacing: 1px;
+      }
+    }
+    
+    /* Specific styles for password inputs */
+    &--password {
+      letter-spacing: 1px;
+      padding-left: 36px;
+      text-indent: 8px;
+      
+      /* When password field has an icon */
+      &.input-field__input--with-icon {
+        padding-left: 36px;
+      }
     }
   }
 
   &__error {
-    color: #c20b0b;
+    color: #d32f2f;
     font-size: 12px;
     margin-top: 4px;
+    min-height: 18px;
+  }
+
+  &--error {
+    .input-field__input {
+      border-color: #d32f2f;
+    }
   }
 }
