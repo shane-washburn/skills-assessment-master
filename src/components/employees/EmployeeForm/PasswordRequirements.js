@@ -11,7 +11,6 @@ const requirements = [
 const PasswordRequirements = ({ validation }) => {
   return (
     <div className="password-requirements">
-      <p className="password-requirements__title">Password must contain:</p>
       <ul className="password-requirements__list">
         {requirements.map((req) => (
           <li 
@@ -20,7 +19,12 @@ const PasswordRequirements = ({ validation }) => {
               validation[req.key] ? 'password-requirements__item--valid' : ''
             }`}
           >
-            {validation[req.key] ? '✓' : '•'} {req.text}
+            <span 
+              className={`password-requirements__icon ${
+                validation[req.key] ? 'password-requirements__icon--valid' : ''
+              }`}
+            />
+            {req.text}
           </li>
         ))}
       </ul>

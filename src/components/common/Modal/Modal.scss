@@ -16,8 +16,8 @@
 .modal {
   background: white;
   border-radius: 4px;
-  width: 100%;
-  max-width: 500px;
+  width: 608px;
+  height: 546px;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
@@ -29,7 +29,6 @@
     justify-content: space-between;
     align-items: center;
     padding: 16px 20px;
-    border-bottom: 1px solid #e0e0e0;
   }
 
   &__title {
@@ -40,23 +39,52 @@
   }
 
   &__close {
-    background: none;
+    background: url('../../../assets/x.svg') center / 14px 14px no-repeat;
     border: none;
-    font-size: 24px;
+    width: 34px;
+    height: 34px;
     cursor: pointer;
-    color: #777;
-    line-height: 1;
-    padding: 0 5px;
-    transition: color 0.2s;
+    padding: 10px;
+    margin: -10px -10px -10px 0;
+    text-indent: -9999px;
+    overflow: hidden;
+    opacity: 0.7;
+    transition: opacity 0.2s;
 
     &:hover {
-      color: #333;
+      opacity: 1;
     }
   }
 
   &__content {
-    padding: 20px;
+    padding: 0;
     overflow-y: auto;
+    
+    &-header {
+      display: flex;
+      align-items: center;
+      padding: 20px 20px 15px;
+      border-bottom: 1px solid #f0f0f0;
+      margin-bottom: 20px;
+    }
+    
+    &-body {
+      padding: 0 20px 20px;
+    }
+  }
+  
+  &__user-icon {
+    width: 24px;
+    height: 24px;
+    background: url('../../../assets/people.svg') center / contain no-repeat;
+    margin-right: 10px;
+  }
+  
+  &__user-name {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
   }
 }
 

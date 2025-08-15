@@ -1,18 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import InputField from '../../common/InputField/InputField';
 import PasswordField from './PasswordField';
+import PasswordRequirements from './PasswordRequirements';
 import Button from '../../common/Button/Button';
 import './EmployeeForm.scss';
+
+const validatePassword = (password) => {
+  return {
+    minLength: password.length >= 8,
+    hasNumber: /[0-9]/.test(password),
+    hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
+    hasUpperCase: /[A-Z]/.test(password)
+  };
+};
 
 const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
     firstName: employee?.firstName || '',
     lastName: employee?.lastName || '',
-    password: ''
+    password: '',
+    confirmPassword: ''
   });
   
   const [errors, setErrors] = useState({});
   const [isPasswordValid, setIsPasswordValid] = useState(true);
+  const [passwordsMatch, setPasswordsMatch] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isTouched, setIsTouched] = useState({
     firstName: false,
@@ -70,6 +82,13 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
     }
   };
 
+  const validatePasswordsMatch = (password, confirmPassword) => {
+    if (password || confirmPassword) {
+      return password === confirmPassword;
+    }
+    return true; // Both empty is considered valid
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setIsSubmitting(true);
@@ -80,11 +99,15 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
       lastName: validateField('lastName', formData.lastName)
     };
 
+    // Check if passwords match
+    const doPasswordsMatch = validatePasswordsMatch(formData.password, formData.confirmPassword);
+    setPasswordsMatch(doPasswordsMatch);
+
     setErrors(newErrors);
 
     // Check if form is valid
     const isFormValid = !Object.values(newErrors).some(error => error) && 
-                       (formData.password === '' || isPasswordValid);
+                       (formData.password === '' || (isPasswordValid && doPasswordsMatch));
 
     if (isFormValid) {
       // If password is empty, don't include it in the submission
@@ -92,44 +115,83 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
       if (!submissionData.password) {
         delete submissionData.password;
       }
+      delete submissionData.confirmPassword; // Don't send confirmPassword to the server
       onSubmit(submissionData);
     }
   };
 
   return (
     <form onSubmit={handleSubmit} className="employee-form">
-      <div className="employee-form__row">
-        <InputField
-          id="firstName"
-          name="firstName"
-          label="First Name"
-          value={formData.firstName}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          error={isSubmitting || isTouched.firstName ? errors.firstName : ''}
-          className="employee-form__input"
-          autoComplete="given-name"
-        />
-        <InputField
-          id="lastName"
-          name="lastName"
-          label="Last Name"
-          value={formData.lastName}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          error={isSubmitting || isTouched.lastName ? errors.lastName : ''}
-          className="employee-form__input"
-          autoComplete="family-name"
-        />
+      <div className="employee-form__section">
+        <h4 className="employee-form__subtitle">Employee Info</h4>
+        <div className="employee-form__fields">
+          <div className="employee-form__field">
+            <InputField
+              id="firstName"
+              name="firstName"
+              label="First Name"
+              value={formData.firstName}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={isSubmitting || isTouched.firstName ? errors.firstName : ''}
+              autoComplete="given-name"
+            />
+          </div>
+          <div className="employee-form__field">
+            <InputField
+              id="lastName"
+              name="lastName"
+              label="Last Name"
+              value={formData.lastName}
+              onChange={handleChange}
+              onBlur={handleBlur}
+              error={isSubmitting || isTouched.lastName ? errors.lastName : ''}
+              autoComplete="family-name"
+            />
+          </div>
+        </div>
       </div>
       
-      <PasswordField
-        value={formData.password}
-        onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-        showValidation={isSubmitting}
-        onValidationChange={setIsPasswordValid}
-      />
-      
+      <div className="employee-form__section">
+        <h4 className="employee-form__subtitle">Update Password</h4>
+        <div className="employee-form__password-wrapper">
+          <div className="employee-form__password-col">
+            <div className="employee-form__password-field">
+              <PasswordField
+                value={formData.password}
+                onChange={(e) => setFormData(prev => ({
+                  ...prev,
+                  password: e.target.value,
+                  confirmPassword: ''
+                }))}
+                showValidation={isSubmitting}
+                onValidationChange={setIsPasswordValid}
+              />
+            </div>
+            <div className="employee-form__password-field">
+              <InputField
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                label="Confirm Password"
+                value={formData.confirmPassword}
+                onChange={(e) => setFormData(prev => ({
+                  ...prev,
+                  confirmPassword: e.target.value
+                }))}
+                error={!passwordsMatch && formData.confirmPassword ? 'Passwords do not match' : ''}
+                autoComplete="new-password"
+              />
+            </div>
+          </div>
+          <div className="employee-form__requirements-col">
+            <div className="employee-form__requirements-box">
+              <PasswordRequirements validation={validatePassword(formData.password)} />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="employee-form__divider"></div>
       <div className="employee-form__actions">
         <Button 
           type="submit" 

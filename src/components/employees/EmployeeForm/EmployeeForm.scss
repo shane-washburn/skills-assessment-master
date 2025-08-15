@@ -1,33 +1,117 @@
 .employee-form {
-  &__row {
+  &__section {
+    margin-bottom: 24px;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  
+  &__subtitle {
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+    margin: 0 0 16px 0;
+  }
+  
+  &__fields {
     display: flex;
+    flex-wrap: wrap;
     gap: 16px;
-    margin-bottom: 16px;
-
+    
     @media (max-width: 600px) {
       flex-direction: column;
-      gap: 0;
+      gap: 16px;
+    }
+  }
+  
+  &__field {
+    flex: 1;
+    min-width: 200px;
+    
+    .input-field {
+      width: 100%;
     }
   }
 
   &__input {
-    flex: 1;
+    margin-bottom: 16px;
+    
+    .input-field {
+      margin-bottom: 0;
+    }
   }
 
   &__actions {
     display: flex;
     gap: 12px;
     margin-top: 24px;
-    justify-content: flex-end;
+    justify-content: flex-start;
   }
 
   &__button {
     min-width: 120px;
   }
 
+  &__password-wrapper {
+    display: flex;
+    gap: 16px;
+    width: 100%;
+    max-width: 616px; /* 300px + 300px + 16px gap */
+  }
+  
+  &__password-col {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  &__requirements-col {
+    width: 300px;
+  }
+  
+  &__requirements-box {
+    width: 100%;
+    
+    h5 {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      font-weight: 500;
+      color: #666;
+    }
+    
+    ul {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      
+      li {
+        margin-bottom: 6px;
+        font-size: 13px;
+        color: #666;
+        
+        &.valid {
+          color: #4caf50;
+        }
+      }
+    }
+  }
+
+  &__password-field {
+    width: 100%;
+  }
+
+  &__divider {
+    height: 1px;
+    background-color: #e0e0e0;
+    margin: 24px 0;
+    width: 100%;
+  }
+
   .password-field {
-    margin-top: 24px;
     position: relative;
+    width: 100%;
 
     &__requirements {
       margin-top: 8px;
@@ -35,6 +119,7 @@
       border-radius: 4px;
       padding: 12px;
       border: 1px solid #e0e0e0;
+      max-width: 100%;
     }
   }
 }
