@@ -66,7 +66,8 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
 
   const validateField = (name, value) => {
     if (!value.trim()) {
-      return `${name === 'firstName' ? 'First name' : 'Last name'} is required`;
+      // Return a space to maintain error state without showing a message
+      return ' ';
     }
     return '';
   };
@@ -89,13 +90,14 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
 
   const handleBlur = (e) => {
     const { name, value } = e.target;
-    setIsTouched(prev => ({
-      ...prev,
-      [name]: true
-    }));
-
+    
     // Only validate on blur if we've already tried to submit
     if (isSubmitting) {
+      setIsTouched(prev => ({
+        ...prev,
+        [name]: true
+      }));
+      
       setErrors(prev => ({
         ...prev,
         [name]: validateField(name, value)
@@ -114,7 +116,16 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const isFirstSubmit = !isSubmitting;
     setIsSubmitting(true);
+    
+    // Mark all fields as touched on first submission
+    if (isFirstSubmit) {
+      setIsTouched({
+        firstName: true,
+        lastName: true
+      });
+    }
     
     // Validate all fields
     const newErrors = {
@@ -170,7 +181,7 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
                 }));
               }}
               onBlur={handleBlur}
-              error={isSubmitting || isTouched.firstName ? errors.firstName : ''}
+              error={isSubmitting ? errors.firstName : ''}
               autoComplete="given-name"
             />
           </div>
@@ -187,7 +198,7 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
                 }));
               }}
               onBlur={handleBlur}
-              error={isSubmitting || isTouched.lastName ? errors.lastName : ''}
+              error={isSubmitting ? errors.lastName : ''}
               autoComplete="family-name"
             />
           </div>
@@ -232,7 +243,7 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
                   }));
                   validatePasswordsMatch(formData.password, newConfirmPassword);
                 }}
-                error={!passwordsMatch && formData.confirmPassword ? 'Passwords do not match' : ''}
+                error={isSubmitting && ((!passwordsMatch && formData.confirmPassword) || (formData.password && !isPasswordValid)) ? ' ' : ''}
                 autoComplete="new-password"
               >
                 <KeyCheckIcon className="input-field__icon" />

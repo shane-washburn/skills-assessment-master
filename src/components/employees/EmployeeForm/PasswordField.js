@@ -99,7 +99,7 @@ const PasswordField = ({
         value={value}
         onChange={onChange}
         onBlur={handleBlur}
-        error={shouldShowError ? 'Please enter a valid password' : ''}
+        error={shouldShowError ? ' ' : ''} // Single space to maintain error state without showing message
         className="password-field__input"
       >
         <KeyIcon className="input-field__icon" />
