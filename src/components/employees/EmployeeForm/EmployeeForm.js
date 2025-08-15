@@ -149,7 +149,12 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
               name="firstName"
               label="First Name"
               value={formData.firstName}
-              onChange={handleChange}
+              onChange={(e) => {
+                setFormData(prev => ({
+                  ...prev,
+                  firstName: e.target.value
+                }));
+              }}
               onBlur={handleBlur}
               error={isSubmitting || isTouched.firstName ? errors.firstName : ''}
               autoComplete="given-name"
@@ -161,7 +166,12 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
               name="lastName"
               label="Last Name"
               value={formData.lastName}
-              onChange={handleChange}
+              onChange={(e) => {
+                setFormData(prev => ({
+                  ...prev,
+                  lastName: e.target.value
+                }));
+              }}
               onBlur={handleBlur}
               error={isSubmitting || isTouched.lastName ? errors.lastName : ''}
               autoComplete="family-name"
