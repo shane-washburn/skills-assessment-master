@@ -1,0 +1,40 @@
+.employee-form {
+  &__row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    @media (max-width: 600px) {
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+
+  &__input {
+    flex: 1;
+  }
+
+  &__actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 24px;
+    justify-content: flex-end;
+  }
+
+  &__button {
+    min-width: 120px;
+  }
+
+  .password-field {
+    margin-top: 24px;
+    position: relative;
+
+    &__requirements {
+      margin-top: 8px;
+      background-color: #f8f8f8;
+      border-radius: 4px;
+      padding: 12px;
+      border: 1px solid #e0e0e0;
+    }
+  }
+}
