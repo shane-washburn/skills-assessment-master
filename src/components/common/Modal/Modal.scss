@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.15);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -21,38 +21,50 @@
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: none;
   animation: modalFadeIn 0.3s ease-out;
 
   &__header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 16px 20px;
+    width: 608px;
+    min-height: 30px;
+    top: 2px;
+    background-color: rgba(0, 0, 0, 0.15);
+    gap: 15px;
+    padding: 0 0 8px 0;
+    border: none;
+    box-shadow: none;
   }
 
   &__title {
     margin: 0;
-    font-size: 18px;
-    font-weight: 500;
-    color: #222;
+    font-family: Lato, sans-serif;
+    font-weight: 600;
+    font-size: 22px;
+    line-height: 30px;
+    letter-spacing: 0;
+    color: #527A00;
   }
 
   &__close {
-    background: url('../../../assets/x.svg') center / 14px 14px no-repeat;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Cpath fill='%23666666' d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z'/%3E%3C/svg%3E") center / 24px 24px no-repeat;
     border: none;
-    width: 34px;
-    height: 34px;
+    width: 24px;
+    height: 24px;
     cursor: pointer;
-    padding: 10px;
-    margin: -10px -10px -10px 0;
+    padding: 0;
+    margin: 0;
+    opacity: 1;
     text-indent: -9999px;
     overflow: hidden;
-    opacity: 0.7;
-    transition: opacity 0.2s;
-
-    &:hover {
+    outline: none;
+    
+    &:hover, &:active, &:focus {
       opacity: 1;
+      background-color: transparent;
+      outline: none;
     }
   }
 
@@ -64,6 +76,11 @@
       display: flex;
       align-items: center;
       padding: 20px 20px 15px;
+      width: 608px;
+      height: 30px;
+      top: 2px;
+      background-color: rgba(255, 255, 255, 0.15);
+      gap: 15px;
       border-bottom: 1px solid #f0f0f0;
       margin-bottom: 20px;
     }

@@ -69,7 +69,7 @@ function App() {
       <Modal 
         isOpen={isModalOpen} 
         onClose={handleCloseModal}
-        title="Update Employee Information"
+        title="Update Employee"
         userName={selectedEmployee ? `${selectedEmployee.firstName} ${selectedEmployee.lastName}` : ''}
       >
         {formData && (
