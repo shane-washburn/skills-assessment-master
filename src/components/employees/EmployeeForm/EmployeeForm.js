@@ -78,24 +78,36 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
 
   const validateField = (name, value) => {
     if (!value.trim()) {
-      // Return a space to maintain error state without showing a message
-      return ' ';
+      return ' '; // Return a space to maintain error state without showing a message
     }
     return '';
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    // Update form data immediately
+    setFormData(prev => {
+      const newData = {
+        ...prev,
+        [name]: value
+      };
+      console.log(`Field changed - ${name}:`, {
+        newValue: value,
+        formData: newData,
+        isTouched: isTouched[name],
+        error: validateField(name, value)
+      });
+      return newData;
+    });
 
-    // Only validate if the field has been touched
-    if (isTouched[name]) {
+    // Only validate if we've already tried to submit or if the field has been touched
+    if (isSubmitting || isTouched[name]) {
+      const error = validateField(name, value);
+      console.log(`Setting error for ${name}:`, error);
       setErrors(prev => ({
         ...prev,
-        [name]: validateField(name, value)
+        [name]: error
       }));
     }
   };
@@ -103,18 +115,24 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
   const handleBlur = (e) => {
     const { name, value } = e.target;
     
-    // Only validate on blur if we've already tried to submit
-    if (isSubmitting) {
-      setIsTouched(prev => ({
+    // Mark field as touched and update errors in the same state update
+    setIsTouched(prev => {
+      const newTouched = {
         ...prev,
         [name]: true
-      }));
+      };
       
-      setErrors(prev => ({
-        ...prev,
-        [name]: validateField(name, value)
-      }));
-    }
+      // Validate after state is updated
+      setTimeout(() => {
+        const error = validateField(name, value);
+        setErrors(prev => ({
+          ...prev,
+          [name]: error
+        }));
+      }, 0);
+      
+      return newTouched;
+    });
   };
 
   const validatePasswordsMatch = React.useCallback((password, confirmPassword) => {
@@ -196,13 +214,22 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
               label="First Name"
               value={formData.firstName}
               onChange={(e) => {
+                const value = e.target.value;
                 setFormData(prev => ({
                   ...prev,
-                  firstName: e.target.value
+                  firstName: value
                 }));
+                
+                // Validate on keystroke if field has been touched
+                if (isTouched.firstName) {
+                  setErrors(prev => ({
+                    ...prev,
+                    firstName: validateField('firstName', value)
+                  }));
+                }
               }}
               onBlur={handleBlur}
-              error={isSubmitting ? errors.firstName : ''}
+              error={isTouched.firstName ? errors.firstName : ''}
               autoComplete="given-name"
             />
           </div>
@@ -213,13 +240,22 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
               label="Last Name"
               value={formData.lastName}
               onChange={(e) => {
+                const value = e.target.value;
                 setFormData(prev => ({
                   ...prev,
-                  lastName: e.target.value
+                  lastName: value
                 }));
+                
+                // Validate on keystroke if field has been touched
+                if (isTouched.lastName) {
+                  setErrors(prev => ({
+                    ...prev,
+                    lastName: validateField('lastName', value)
+                  }));
+                }
               }}
               onBlur={handleBlur}
-              error={isSubmitting ? errors.lastName : ''}
+              error={isTouched.lastName ? errors.lastName : ''}
               autoComplete="family-name"
             />
           </div>
