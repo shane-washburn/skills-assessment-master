@@ -56,7 +56,10 @@ const InputField = ({
               fill="currentColor"
             />
           </svg>
-          <label htmlFor={id || name} className={labelClasses}>
+          <label 
+            htmlFor={id || name} 
+            className={`${labelClasses} ${error ? 'input-field__label--error' : ''}`}
+          >
             {label}
           </label>
         </div>

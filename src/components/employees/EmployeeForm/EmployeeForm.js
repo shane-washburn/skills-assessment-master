@@ -300,14 +300,7 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
                   }));
                   validatePasswordsMatch(formData.password, newConfirmPassword);
                 }}
-                error={
-                  isSubmitting && formData.confirmPassword && (
-                    (formData.password && !passwordsMatch) || 
-                    (formData.password && !isPasswordValid)
-                  )
-                    ? ' ' // Single space to maintain error state without showing message
-                    : ''
-                }
+
                 autoComplete="new-password"
               >
                 <KeyCheckIcon className="input-field__icon" />
