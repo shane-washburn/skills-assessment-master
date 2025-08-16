@@ -12,7 +12,7 @@ const ModalHeader = ({ title, onClose }) => {
         onClick={onClose}
         aria-label="Close modal"
       >
-        <Icon name="x-14x14" />
+        <Icon name="x-14x14" style={{ opacity: 0.5 }} />
       </button>
     </div>
   );

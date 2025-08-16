@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.15);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -16,9 +16,10 @@
 .modal {
   background: white;
   border-radius: 8px;
-  width: 100%;
-  max-width: 600px;
-  max-height: 90vh;
+  width: 608px;
+  height: 546px;
+  max-width: 608px;
+  max-height: 546px;
   display: flex;
   flex-direction: column;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);

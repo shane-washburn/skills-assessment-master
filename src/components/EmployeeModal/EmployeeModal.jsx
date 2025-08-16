@@ -89,12 +89,7 @@ const EmployeeModal = ({ isOpen, onClose, employee, onSubmit }) => {
     }
   }, [employee, setValues, setErrors]);
 
-  // Close modal when clicking outside
-  const handleOverlayClick = (e) => {
-    if (e.target === e.currentTarget) {
-      onClose();
-    }
-  };
+  // Removed click-outside handler to prevent closing when clicking outside the modal
 
   if (!isOpen) return null;
 
@@ -103,7 +98,6 @@ const EmployeeModal = ({ isOpen, onClose, employee, onSubmit }) => {
   return (
     <div 
       className="modal-overlay" 
-      onClick={handleOverlayClick} 
       role="dialog" 
       aria-modal="true"
     >

@@ -11,10 +11,15 @@ export function vanillaIcon(iconName) {
 	`.trim();
 }
 
-export function Icon({name}) {
+export function Icon({name, style}) {
 	const [width, height] = getIconDimensions(name);
 	return (
-		<svg width={width} height={height} viewBox={`0 0 ${ width } ${ height }`}>
+		<svg 
+      width={width} 
+      height={height} 
+      viewBox={`0 0 ${ width } ${ height }`}
+      style={style}
+    >
 			<use xlinkHref={ `/assets/sprite.svg#${ name }` }/>
 		</svg>
 	);
