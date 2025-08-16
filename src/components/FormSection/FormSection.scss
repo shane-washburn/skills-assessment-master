@@ -1,5 +1,9 @@
 .form-section {
-  padding-top: 24px;
+  padding-top: 0;
+  
+  &:not(:first-child) {
+    padding-top: 24px;
+  }
   
   &:last-child {
     margin-bottom: 0;

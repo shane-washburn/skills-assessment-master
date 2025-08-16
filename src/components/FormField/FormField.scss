@@ -1,50 +1,95 @@
 .form-field {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  
+  /* Remove bottom margin for password fields */
+  &[data-type="password"] {
+    margin-bottom: 0;
+  }
+  
+  /* Specific style for confirm password field */
+  &[data-name="confirmPassword"] {
+    margin-bottom: 1.5rem;
+  }
   
   &__label {
     display: block;
     margin-bottom: 0.5rem;
-    font-family: Lato, sans-serif;
-    font-weight: 400;
-    font-size: 14px;
-    line-height: 19px;
-    color: #555555;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.875rem;
+    line-height: 1.5;
   }
   
-  &__required {
-    color: #e74c3c;
-    margin-left: 0.25rem;
+  &__input-wrapper {
+    position: relative;
+    width: 100%;
   }
   
   &__input {
     width: 100%;
-    padding: 0.75rem;
+    padding: 0.75rem 1rem;
     border: 1px solid #ddd;
     border-radius: 4px;
     font-size: 1rem;
-    transition: border-color 0.2s ease-in-out;
+    line-height: 1.5;
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    background-color: transparent;
+    position: relative;
+    
+    /* Password field specific styles */
+    &[type="password"] {
+      padding-left: 2.8125rem; /* 45px */
+    }
+    
+    &[type="password"] {
+      padding-left: 2.8125rem; /* 45px */
+    }
     
     &:focus {
       outline: none;
-      border-color: #3498db;
-      box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+      border-color: #527A00;
+      box-shadow: 0 0 0 2px rgba(82, 122, 0, 0.2);
     }
     
     &::placeholder {
-      color: #aaa;
+      color: #999;
+    }
+  }
+  
+  &__icon {
+    position: absolute;
+    left: 1px;
+    top: 1px;
+    height: calc(100% - 2px);
+    width: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    background-color: #f5f5f5;
+    border-radius: 3px 0 0 3px;
+    opacity: 0.5;
+    z-index: 1;
+    
+    svg {
+      width: 16px;
+      height: 16px;
+      fill: #666;
+      display: block;
+      flex: 0 0 16px;
     }
   }
   
   &__error {
-    color: #e74c3c;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
+    display: none; /* Hide error messages */
   }
   
   &--error &__input {
     border-color: #e74c3c;
     
     &:focus {
+      border-color: #e74c3c;
       box-shadow: 0 0 0 2px rgba(231, 76, 60, 0.2);
     }
   }
