@@ -30,8 +30,13 @@
     justify-content: center;
     
     svg {
+      color: #666;
       opacity: 0.75;
       transition: opacity 0.2s;
+      
+      path {
+        fill: currentColor;
+      }
     }
     
     &:hover {
