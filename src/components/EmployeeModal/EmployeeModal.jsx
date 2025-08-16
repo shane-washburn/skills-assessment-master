@@ -114,58 +114,69 @@ const EmployeeModal = ({ isOpen, onClose, employee, onSubmit }) => {
             </svg>
             <span>{employee?.firstName} {employee?.lastName}</span>
           </div>
-          <div className="divider"></div>
           <form onSubmit={handleFormSubmit(handleSave)}>
             <FormSection title="Employee Info">
-              <FormField
-                label="First Name"
-                name="firstName"
-                value={values.firstName}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={errors.firstName}
-                touched={touched.firstName}
-                required
-              />
-              
-              <FormField
-                label="Last Name"
-                name="lastName"
-                value={values.lastName}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={errors.lastName}
-                touched={touched.lastName}
-                required
-              />
+              <div className="name-fields">
+                <FormField
+                  label="First Name"
+                  name="firstName"
+                  value={values.firstName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={errors.firstName}
+                  touched={touched.firstName}
+                />
+                
+                <FormField
+                  label="Last Name"
+                  name="lastName"
+                  value={values.lastName}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  error={errors.lastName}
+                  touched={touched.lastName}
+                />
+              </div>
             </FormSection>
             
-            <FormSection title="Update Password (Optional)" className="password-section">
-              <FormField
-                label="New Password"
-                name="password"
-                type="password"
-                value={values.password}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={errors.password}
-                touched={touched.password}
-                autoComplete="new-password"
-              />
-              
-              <FormField
-                label="Confirm New Password"
-                name="confirmPassword"
-                type="password"
-                value={values.confirmPassword}
-                onChange={handleChange}
-                onBlur={handleBlur}
-                error={errors.confirmPassword}
-                touched={touched.confirmPassword}
-                autoComplete="new-password"
-              />
-              
-              <PasswordRequirements requirements={passwordRequirements} />
+            <FormSection title="Update Password" className="password-section">
+              <div className="password-layout">
+                <div className="password-fields">
+                  <FormField
+                    label="Password"
+                    name="password"
+                    type="password"
+                    value={values.password}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={errors.password}
+                    touched={touched.password}
+                    autoComplete="new-password"
+                  />
+                  
+                  <FormField
+                    label="Confirm Password"
+                    name="confirmPassword"
+                    type="password"
+                    value={values.confirmPassword}
+                    onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={errors.confirmPassword}
+                    touched={touched.confirmPassword}
+                    autoComplete="new-password"
+                  />
+                </div>
+                
+                <div className="password-requirements">
+                  <ul>
+                    <li>8 charcacters or more</li>
+                    <li>At least 1 number</li>
+                    <li>Uppercase</li>
+                    <li>Lowercase</li>
+                    <li>Password must match</li>
+                  </ul>
+                </div>
+              </div>
             </FormSection>
             
             <FormActions 
