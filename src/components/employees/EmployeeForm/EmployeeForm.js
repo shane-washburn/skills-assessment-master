@@ -123,24 +123,24 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
       [fieldName]: true
     }));
 
-    // Always validate on blur
-    const error = validateField(fieldName, value);
-    
-    // Only update errors if we're in submission mode or if there's an error to show
-    setErrors(prev => {
-      const shouldShowError = isSubmitting || error;
-      const newError = shouldShowError ? error : '';
+    // Only validate on blur if form has been submitted
+    if (isSubmitting) {
+      const error = validateField(fieldName, value);
       
-      // Only update if the error state would change
-      if (prev[fieldName] === newError) {
-        return prev;
-      }
-      
-      return {
-        ...prev,
-        [fieldName]: newError
-      };
-    });
+      setErrors(prev => {
+        const newError = error || '';
+        
+        // Only update if the error state would change
+        if (prev[fieldName] === newError) {
+          return prev;
+        }
+        
+        return {
+          ...prev,
+          [fieldName]: newError
+        };
+      });
+    }
   };
 
   const validatePasswordsMatch = React.useCallback((password, confirmPassword) => {
@@ -260,7 +260,7 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
                 }));
               }}
               onBlur={handleBlur}
-              error={!!((isTouched.firstName || isSubmitting) && errors.firstName)}
+              error={isSubmitting ? !!errors.firstName : (isTouched.firstName && !!errors.firstName)}
               autoComplete="given-name"
             />
           </div>
@@ -278,7 +278,7 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
                 }));
               }}
               onBlur={handleBlur}
-              error={!!((isTouched.lastName || isSubmitting) && errors.lastName)}
+              error={isSubmitting ? !!errors.lastName : (isTouched.lastName && !!errors.lastName)}
               autoComplete="family-name"
             />
           </div>
