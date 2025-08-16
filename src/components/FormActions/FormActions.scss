@@ -3,8 +3,8 @@
   flex-direction: row !important;
   align-items: center;
   justify-content: flex-start;
-  gap: 1.5rem;
-  padding: 0 !important;
+  gap: 1rem;
+  padding: 0 0 0 1rem !important;
   margin: 0 !important;
   width: 100%;
   box-sizing: border-box;
@@ -13,7 +13,7 @@
     min-width: 160px;
     padding: 0.0rem 1.5rem;
     border: none;
-    border-radius: 4px;
+    border-radius: 2px;
     font-size: 1rem;
     font-weight: 500;
     cursor: pointer;
@@ -22,10 +22,12 @@
     &--cancel {
       background: none;
       color: #0066cc;
-      text-decoration: underline;
+      text-decoration: none;
       text-align: left;
       padding: 0.75rem 0;
       min-width: auto;
+      display: flex;
+      align-items: center;
       
       &:hover:not(:disabled) {
         color: #004d99;
