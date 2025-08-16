@@ -20,7 +20,7 @@ export function Icon({name, style}) {
       viewBox={`0 0 ${ width } ${ height }`}
       style={style}
     >
-			<use xlinkHref={ `/assets/sprite.svg#${ name }` }/>
+			<use xlinkHref={ `/assets/sprite.svg#${ name }` } style={{ fill: style?.fill || 'currentColor' }} />
 		</svg>
 	);
 }

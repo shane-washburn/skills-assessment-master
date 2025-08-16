@@ -103,13 +103,20 @@ const EmployeeModal = ({ isOpen, onClose, employee, onSubmit }) => {
     >
       <div className="modal" ref={modalRef}>
         <ModalHeader 
-          title="Update Employee Information" 
+          title="Update Employee" 
           onClose={onClose} 
         />
         
         <ModalContent>
+          <div className="employee-subtitle">
+            <svg width="18" height="15" viewBox="0 0 18 15">
+              <use xlinkHref="/assets/sprite.svg#people-18x15" fill="#527A00" />
+            </svg>
+            <span>{employee?.firstName} {employee?.lastName}</span>
+          </div>
+          <div className="divider"></div>
           <form onSubmit={handleFormSubmit(handleSave)}>
-            <FormSection title="Employee Information">
+            <FormSection title="Employee Info">
               <FormField
                 label="First Name"
                 name="firstName"
