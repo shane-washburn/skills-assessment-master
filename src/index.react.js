@@ -14,13 +14,9 @@ function App() {
   };
 
   const handleOpenModal = () => {
-    console.log('Open modal button clicked');
-    console.log('Selected employee ID:', selectedEmployeeId);
     if (selectedEmployeeId) {
-      console.log('Setting modal open to true');
       setIsModalOpen(true);
     } else {
-      console.log('No employee selected');
     }
   };
 
@@ -30,11 +26,9 @@ function App() {
 
   const handleSaveEmployee = async (formData) => {
     // In a real app, you would make an API call here
-    console.log('Saving employee data:', formData);
     // Simulate API call
     return new Promise(resolve => {
       setTimeout(() => {
-        console.log('Employee data saved successfully');
         resolve();
       }, 1000);
     });

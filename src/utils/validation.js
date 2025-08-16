@@ -29,17 +29,16 @@ export const validateForm = (values, isPasswordRequired = false) => {
     errors.lastName = 'Last name is required';
   }
   
-  // Password validation if password fields are not empty
-  if (values.password || values.confirmPassword || isPasswordRequired) {
+  // Only validate password if it's being changed (either field has value)
+  if (values.password || values.confirmPassword) {
     // Check if passwords match
     if (values.password !== values.confirmPassword) {
       errors.confirmPassword = 'Passwords do not match';
     }
     
-    // Check password strength
-    const passwordValidation = validatePassword(values.password || '');
-    if (!passwordValidation.isValid) {
-      errors.password = 'Password does not meet requirements';
+    // Only require password to be at least 8 characters for updates
+    if (!values.password || values.password.length < 8) {
+      errors.password = 'Password must be at least 8 characters';
     }
   }
   

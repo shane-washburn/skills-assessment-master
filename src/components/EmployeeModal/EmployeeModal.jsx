@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import useFormValidation from '../../hooks/useFormValidation';
 import { validateForm, getPasswordRequirements } from '../../utils/validation';
 import ModalHeader from '../ModalHeader/ModalHeader.jsx';
@@ -11,6 +11,8 @@ import { Icon } from '../../icon';
 import '../EmployeeModal/EmployeeModal.scss';
 
 const EmployeeModal = ({ isOpen, onClose, employee, onSubmit }) => {
+  const [submitError, setSubmitError] = useState('');
+  const [hasSubmitted, setHasSubmitted] = useState(false);
   const modalRef = useRef(null);
   
   // Initialize form with employee data or empty values
@@ -27,7 +29,7 @@ const EmployeeModal = ({ isOpen, onClose, employee, onSubmit }) => {
     errors,
     touched,
     isSubmitting,
-    handleChange,
+    handleChange: originalHandleChange,
     handleBlur,
     handleSubmit: handleFormSubmit,
     setValues,
@@ -35,22 +37,54 @@ const EmployeeModal = ({ isOpen, onClose, employee, onSubmit }) => {
     setIsSubmitting
   } = useFormValidation(initialState, (values) => validateForm(values, !!values.password));
 
+  // Handle changes for all form fields
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    
+    // First update the form values using the original handler
+    originalHandleChange(e);
+    
+    // If it's a password field and we've submitted at least once, validate on change
+    if ((name === 'password' || name === 'confirmPassword') && hasSubmitted) {
+      // Create updated values object with the new value
+      const updatedValues = {
+        ...values,
+        [name]: value
+      };
+      
+      // Validate the updated values
+      const validationErrors = validateForm(updatedValues, true);
+      
+      // Only update errors for password fields
+      setErrors(prev => ({
+        ...prev,
+        password: validationErrors.password,
+        confirmPassword: validationErrors.confirmPassword
+      }));
+    }
+  };
+
   // Get password requirements status
   const passwordRequirements = getPasswordRequirements(values.password);
 
   // Handle form submission
   const handleSave = async (formValues) => {
+    setHasSubmitted(true);
+    
+    if (!formValues.__isValid) {
+      // Show error for invalid form
+      return;
+    }
+    
     try {
+      const { __isValid, ...cleanValues } = formValues;
       await onSubmit({
-        ...formValues,
+        ...cleanValues,
         id: employee?.id
       });
-      onClose();
+      alert('Employee information saved successfully!');
     } catch (error) {
-      console.error('Error saving employee:', error);
-      // Handle error state if needed
-    } finally {
-      setIsSubmitting(false);
+      alert(error.message || 'Failed to save employee information. Please try again.');
     }
   };
 
@@ -92,8 +126,6 @@ const EmployeeModal = ({ isOpen, onClose, employee, onSubmit }) => {
   // Removed click-outside handler to prevent closing when clicking outside the modal
 
   if (!isOpen) return null;
-
-  console.log('Modal rendering with employee:', employee);
 
   return (
     <div 
@@ -184,7 +216,10 @@ const EmployeeModal = ({ isOpen, onClose, employee, onSubmit }) => {
             
             <div className="form-actions-wrapper">
               <FormActions 
-                onCancel={onClose}
+                onCancel={() => {
+                  setSubmitError('');
+                  onClose();
+                }}
                 onSubmit={handleFormSubmit(handleSave)}
                 isSubmitting={isSubmitting}
                 submitText="Save Employee Info"

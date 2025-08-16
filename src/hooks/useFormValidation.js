@@ -28,14 +28,22 @@ const useFormValidation = (initialState, validate) => {
     }
   };
 
-  const handleSubmit = (callback) => (e) => {
+  const handleSubmit = (callback) => async (e) => {
     e.preventDefault();
-    setIsSubmitting(true);
     const validationErrors = validate(values);
     setErrors(validationErrors);
     
-    if (Object.keys(validationErrors).length === 0) {
-      callback(values);
+    const isValid = Object.keys(validationErrors).length === 0;
+    if (isValid) {
+      try {
+        setIsSubmitting(true);
+        await callback({ ...values, __isValid: true });
+      } finally {
+        setIsSubmitting(false);
+      }
+    } else {
+      // Call with validation status but don't prevent further actions
+      await callback({ ...values, __isValid: false });
     }
   };
 

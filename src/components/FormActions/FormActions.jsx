@@ -5,10 +5,9 @@ const FormActions = ({ onCancel, onSubmit, isSubmitting = false, submitText = 'S
   return (
     <div className="form-actions">
       <button
-        type="button"
+        type="submit"
         className="form-actions__button form-actions__button--submit"
         onClick={onSubmit}
-        disabled={isSubmitting}
       >
         {isSubmitting ? 'Saving...' : submitText}
       </button>
@@ -16,7 +15,6 @@ const FormActions = ({ onCancel, onSubmit, isSubmitting = false, submitText = 'S
         type="button"
         className="form-actions__button form-actions__button--cancel"
         onClick={onCancel}
-        disabled={isSubmitting}
       >
         Cancel
       </button>
