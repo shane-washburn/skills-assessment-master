@@ -71,10 +71,11 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
       setFormData({
         firstName: employee.firstName || '',
         lastName: employee.lastName || '',
-        password: ''
+        password: '',
+        confirmPassword: ''
       });
       setErrors({});
-      setIsTouched({ firstName: false, lastName: false });
+      setIsTouched({ firstName: false, lastName: false, password: false, confirmPassword: false });
     }
   }, [employee]);
 

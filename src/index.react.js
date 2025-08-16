@@ -41,7 +41,6 @@ function App() {
         alert('Employee information updated successfully!');
         setIsModalOpen(false);
       } catch (error) {
-        console.error('Error updating employee:', error);
         alert(`Error: ${error.message || 'Failed to update employee information. Please try again.'}`);
       }
     } else {
