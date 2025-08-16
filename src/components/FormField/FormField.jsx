@@ -24,8 +24,17 @@ const FormField = ({
     >
       {label && (
         <label htmlFor={name} className="form-field__label">
-          {label}
-          {required && <span className="form-field__required">*</span>}
+          {showError && (
+            <span className="form-field__error-icon">
+              <svg viewBox="0 0 14 14" width="14" height="14">
+                <use xlinkHref="/assets/sprite.svg#error-14x14" />
+              </svg>
+            </span>
+          )}
+          <span className="form-field__label-text">
+            {label}
+            {required && <span className="form-field__required">*</span>}
+          </span>
         </label>
       )}
       <div className="form-field__input-wrapper">
