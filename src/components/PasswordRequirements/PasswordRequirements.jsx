@@ -5,7 +5,6 @@ import '../PasswordRequirements/PasswordRequirements.scss';
 const PasswordRequirements = ({ requirements }) => {
   return (
     <div className="password-requirements">
-      <p className="password-requirements__title">Password must contain:</p>
       <ul className="password-requirements__list">
         {requirements.map((requirement, index) => (
           <li 

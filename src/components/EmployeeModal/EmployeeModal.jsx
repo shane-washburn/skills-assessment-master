@@ -115,76 +115,81 @@ const EmployeeModal = ({ isOpen, onClose, employee, onSubmit }) => {
             <span>{employee?.firstName} {employee?.lastName}</span>
           </div>
           <form onSubmit={handleFormSubmit(handleSave)}>
-            <FormSection title="Employee Info">
-              <div className="name-fields">
-                <FormField
-                  label="First Name"
-                  name="firstName"
-                  value={values.firstName}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={errors.firstName}
-                  touched={touched.firstName}
-                />
-                
-                <FormField
-                  label="Last Name"
-                  name="lastName"
-                  value={values.lastName}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                  error={errors.lastName}
-                  touched={touched.lastName}
-                />
-              </div>
-            </FormSection>
-            
-            <FormSection title="Update Password" className="password-section">
-              <div className="password-layout">
-                <div className="password-fields">
+            <div className="form-content">
+              <FormSection title="Employee Info">
+                <div className="name-fields">
                   <FormField
-                    label="Password"
-                    name="password"
-                    type="password"
-                    value={values.password}
+                    label="First Name"
+                    name="firstName"
+                    value={values.firstName}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    error={errors.password}
-                    touched={touched.password}
-                    autoComplete="new-password"
+                    error={errors.firstName}
+                    touched={touched.firstName}
                   />
                   
                   <FormField
-                    label="Confirm Password"
-                    name="confirmPassword"
-                    type="password"
-                    value={values.confirmPassword}
+                    label="Last Name"
+                    name="lastName"
+                    value={values.lastName}
                     onChange={handleChange}
                     onBlur={handleBlur}
-                    error={errors.confirmPassword}
-                    touched={touched.confirmPassword}
-                    autoComplete="new-password"
+                    error={errors.lastName}
+                    touched={touched.lastName}
                   />
                 </div>
-                
-                <div className="password-requirements">
-                  <ul>
-                    <li>8 charcacters or more</li>
-                    <li>At least 1 number</li>
-                    <li>Uppercase</li>
-                    <li>Lowercase</li>
-                    <li>Password must match</li>
-                  </ul>
+              </FormSection>
+              
+              <FormSection title="Update Password" className="password-section">
+                <div className="password-layout">
+                  <div className="password-fields">
+                    <FormField
+                      label="Password"
+                      name="password"
+                      type="password"
+                      value={values.password}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={errors.password}
+                      touched={touched.password}
+                      autoComplete="new-password"
+                    />
+                    
+                    <FormField
+                      label="Confirm Password"
+                      name="confirmPassword"
+                      type="password"
+                      value={values.confirmPassword}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={errors.confirmPassword}
+                      touched={touched.confirmPassword}
+                      autoComplete="new-password"
+                    />
+                  </div>
+                  
+                  <PasswordRequirements requirements={[
+                    { text: '8 characters or more', isValid: values.password && values.password.length >= 8 },
+                    { text: 'At least 1 number', isValid: /\d/.test(values.password) },
+                    { text: 'At least 1 uppercase letter', isValid: /[A-Z]/.test(values.password) },
+                    { text: 'At least 1 lowercase letter', isValid: /[a-z]/.test(values.password) },
+                    { 
+                      text: 'Passwords match', 
+                      isValid: values.password && values.password === values.confirmPassword 
+                    }
+                  ]} />
                 </div>
-              </div>
-            </FormSection>
+              </FormSection>
+            </div>
             
-            <FormActions 
-              onCancel={onClose}
-              onSubmit={handleFormSubmit(handleSave)}
-              isSubmitting={isSubmitting}
-              submitText="Save Employee Info"
-            />
+            <div className="form-actions-wrapper">
+              <FormActions 
+                onCancel={onClose}
+                onSubmit={handleFormSubmit(handleSave)}
+                isSubmitting={isSubmitting}
+                submitText="Save Employee Info"
+              />
+            </div>
           </form>
         </ModalContent>
       </div>
