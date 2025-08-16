@@ -61,7 +61,9 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isTouched, setIsTouched] = useState({
     firstName: false,
-    lastName: false
+    lastName: false,
+    password: false,
+    confirmPassword: false
   });
 
   useEffect(() => {
@@ -77,8 +79,12 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
   }, [employee]);
 
   const validateField = (name, value) => {
-    if (!value.trim()) {
-      return ' '; // Return a space to maintain error state without showing a message
+    if (name === 'firstName' || name === 'lastName') {
+      const isEmpty = !value || !value.trim();
+      
+      if (isEmpty) {
+        return `${name === 'firstName' ? 'First name' : 'Last name'} is required`;
+      }
     }
     return '';
   };
@@ -86,25 +92,15 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     
-    // Update form data immediately
-    setFormData(prev => {
-      const newData = {
-        ...prev,
-        [name]: value
-      };
-      console.log(`Field changed - ${name}:`, {
-        newValue: value,
-        formData: newData,
-        isTouched: isTouched[name],
-        error: validateField(name, value)
-      });
-      return newData;
-    });
+    // Update form data
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
 
-    // Only validate if we've already tried to submit or if the field has been touched
-    if (isSubmitting || isTouched[name]) {
+    // Only validate during first submission phase
+    if (isSubmitting) {
       const error = validateField(name, value);
-      console.log(`Setting error for ${name}:`, error);
       setErrors(prev => ({
         ...prev,
         [name]: error
@@ -113,25 +109,36 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
   };
 
   const handleBlur = (e) => {
-    const { name, value } = e.target;
+    const { name, id, value } = e.target;
+    const fieldName = name || id; // Fall back to id if name is empty
     
-    // Mark field as touched and update errors in the same state update
-    setIsTouched(prev => {
-      const newTouched = {
+    if (!fieldName) {
+      return;
+    }
+    
+    // Mark field as touched
+    setIsTouched(prev => ({
+      ...prev,
+      [fieldName]: true
+    }));
+
+    // Always validate on blur
+    const error = validateField(fieldName, value);
+    
+    // Only update errors if we're in submission mode or if there's an error to show
+    setErrors(prev => {
+      const shouldShowError = isSubmitting || error;
+      const newError = shouldShowError ? error : '';
+      
+      // Only update if the error state would change
+      if (prev[fieldName] === newError) {
+        return prev;
+      }
+      
+      return {
         ...prev,
-        [name]: true
+        [fieldName]: newError
       };
-      
-      // Validate after state is updated
-      setTimeout(() => {
-        const error = validateField(name, value);
-        setErrors(prev => ({
-          ...prev,
-          [name]: error
-        }));
-      }, 0);
-      
-      return newTouched;
     });
   };
 
@@ -151,55 +158,82 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
     return match;
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const isFirstSubmit = !isSubmitting;
-    setIsSubmitting(true);
-    
-    // Mark all fields as touched on first submission
-    if (isFirstSubmit) {
-      setIsTouched({
-        firstName: true,
-        lastName: true
-      });
-    }
-    
-    // Validate all fields
-    const newErrors = {
-      firstName: validateField('firstName', formData.firstName),
-      lastName: validateField('lastName', formData.lastName)
-    };
+  const validateAllFields = () => {
+    const newErrors = {};
+    let isValid = true;
 
-    // Check if passwords match
-    const doPasswordsMatch = validatePasswordsMatch(formData.password, formData.confirmPassword);
-    setPasswordsMatch(doPasswordsMatch);
+    // Validate first name
+    const firstNameError = validateField('firstName', formData.firstName);
+    if (firstNameError) {
+      newErrors.firstName = firstNameError;
+      isValid = false;
+    }
+
+    // Validate last name
+    const lastNameError = validateField('lastName', formData.lastName);
+    if (lastNameError) {
+      newErrors.lastName = lastNameError;
+      isValid = false;
+    }
 
     setErrors(newErrors);
+    return isValid;
+  };
 
-    // Always validate password if password field is not empty
-    const currentPasswordValidation = formData.password ? validatePassword(formData.password) : 
-      { minLength: true, hasNumber: true, hasUpperCase: true, hasLowerCase: true };
-    
-    // If password is being set (not empty), all conditions must be met
-    const passwordValid = formData.password === '' || 
-                         (currentPasswordValidation.minLength &&
-                          currentPasswordValidation.hasNumber &&
-                          currentPasswordValidation.hasUpperCase &&
-                          currentPasswordValidation.hasLowerCase &&
-                          doPasswordsMatch &&
-                          formData.password === formData.confirmPassword);
-    
-    const isFormValid = !Object.values(newErrors).some(error => error) && passwordValid;
-
-    if (isFormValid) {
-      // If password is empty, don't include it in the submission
-      const submissionData = { ...formData };
-      if (!submissionData.password) {
-        delete submissionData.password;
-      }
-      delete submissionData.confirmPassword; // Don't send confirmPassword to the server
-      onSubmit(submissionData);
+  const validatePasswordFields = () => {
+    // If no password is provided, it's valid (passwords are optional)
+    if (!formData.password && !formData.confirmPassword) {
+      return true;
     }
+    
+    // If password is provided but confirm password is empty, it's invalid
+    if (formData.password && !formData.confirmPassword) {
+      return false;
+    }
+    
+    // If confirm password is provided but password is empty, it's invalid
+    if (!formData.password && formData.confirmPassword) {
+      return false;
+    }
+    
+    // If both fields are filled, validate the password
+    const passwordValidation = validatePassword(formData.password);
+    const isPasswordValid = Object.values(passwordValidation).every(Boolean);
+    const doPasswordsMatch = formData.password === formData.confirmPassword;
+    
+    return isPasswordValid && doPasswordsMatch;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    // Mark all fields as touched
+    setIsTouched({
+      firstName: true,
+      lastName: true,
+      password: true,
+      confirmPassword: true
+    });
+    
+    // Validate all fields
+    const isNameValid = validateAllFields();
+    const isPasswordValid = validatePasswordFields();
+    
+    // Only proceed if all validations pass
+    if (!isNameValid || !isPasswordValid) {
+      setIsSubmitting(true);
+      return;
+    }
+    
+    // If we get here, all validations passed
+    const submissionData = { ...formData };
+    
+    // If password is empty, don't include it in the submission
+    if (!submissionData.password) {
+      delete submissionData.password;
+    }
+    delete submissionData.confirmPassword; // Don't send confirmPassword to the server
+    onSubmit(submissionData);
   };
 
   return (
@@ -214,22 +248,14 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
               label="First Name"
               value={formData.firstName}
               onChange={(e) => {
-                const value = e.target.value;
+                // Only update the form data, no validation on change
                 setFormData(prev => ({
                   ...prev,
-                  firstName: value
+                  firstName: e.target.value
                 }));
-                
-                // Validate on keystroke if field has been touched
-                if (isTouched.firstName) {
-                  setErrors(prev => ({
-                    ...prev,
-                    firstName: validateField('firstName', value)
-                  }));
-                }
               }}
               onBlur={handleBlur}
-              error={isTouched.firstName ? errors.firstName : ''}
+              error={!!((isTouched.firstName || isSubmitting) && errors.firstName)}
               autoComplete="given-name"
             />
           </div>
@@ -240,22 +266,14 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
               label="Last Name"
               value={formData.lastName}
               onChange={(e) => {
-                const value = e.target.value;
+                // Only update the form data, no validation on change
                 setFormData(prev => ({
                   ...prev,
-                  lastName: value
+                  lastName: e.target.value
                 }));
-                
-                // Validate on keystroke if field has been touched
-                if (isTouched.lastName) {
-                  setErrors(prev => ({
-                    ...prev,
-                    lastName: validateField('lastName', value)
-                  }));
-                }
               }}
               onBlur={handleBlur}
-              error={isTouched.lastName ? errors.lastName : ''}
+              error={!!((isTouched.lastName || isSubmitting) && errors.lastName)}
               autoComplete="family-name"
             />
           </div>
@@ -274,14 +292,28 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
                   setFormData(prev => ({
                     ...prev,
                     password: newPassword,
-                    confirmPassword: ''
+                    confirmPassword: newPassword ? prev.confirmPassword : ''
                   }));
-                  // Re-validate confirm password when password changes
-                  if (formData.confirmPassword) {
-                    validatePasswordsMatch(newPassword, formData.confirmPassword);
+                  
+                  // Clear password error when user starts typing
+                  if (errors.password) {
+                    setErrors(prev => ({
+                      ...prev,
+                      password: ''
+                    }));
                   }
                 }}
-                showValidation={isSubmitting}
+                onBlur={() => {
+                  setIsTouched(prev => ({
+                    ...prev,
+                    password: true
+                  }));
+                  
+                  if (isSubmitting) {
+                    validatePasswordFields();
+                  }
+                }}
+                showValidation={isSubmitting || isTouched.password}
                 onValidationChange={handlePasswordValidation}
               />
             </div>
@@ -298,9 +330,31 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
                     ...prev,
                     confirmPassword: newConfirmPassword
                   }));
-                  validatePasswordsMatch(formData.password, newConfirmPassword);
+                  
+                  // Clear any existing errors when user types
+                  if (errors.confirmPassword) {
+                    setErrors(prev => ({
+                      ...prev,
+                      confirmPassword: ''
+                    }));
+                  }
                 }}
-
+                onBlur={() => {
+                  setIsTouched(prev => ({
+                    ...prev,
+                    confirmPassword: true
+                  }));
+                  
+                  if (isSubmitting) {
+                    validatePasswordFields();
+                  }
+                }}
+                error={Boolean(
+                  (isTouched.confirmPassword || isSubmitting) && 
+                  formData.password && 
+                  formData.confirmPassword && 
+                  formData.password !== formData.confirmPassword
+                )}
                 autoComplete="new-password"
               >
                 <KeyCheckIcon className="input-field__icon" />

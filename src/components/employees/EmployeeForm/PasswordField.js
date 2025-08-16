@@ -99,7 +99,8 @@ const PasswordField = ({
     setTouched(true);
   };
 
-  const shouldShowError = showValidation && touched && value && !validation.isValid;
+  // Always show error state if validation fails, but don't show message
+  const hasError = showValidation && touched && value && !validation.isValid;
 
   return (
     <div className="password-field">
@@ -111,7 +112,7 @@ const PasswordField = ({
         value={value}
         onChange={onChange}
         onBlur={handleBlur}
-        error={shouldShowError ? ' ' : ''} // Single space to maintain error state without showing message
+        error={hasError} // Boolean to control error state without showing message
         className="password-field__input"
       >
         <KeyIcon className="input-field__icon" />

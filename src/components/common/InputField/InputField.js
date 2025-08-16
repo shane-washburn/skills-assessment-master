@@ -17,7 +17,8 @@ const InputField = ({
   children,
   ...props
 }) => {
-  const inputClasses = `input-field__input ${error ? 'input-field__input--error' : ''} ${className}`;
+  const hasError = Boolean(error);
+  const inputClasses = `input-field__input ${hasError ? 'input-field__input--error' : ''} ${className}`;
   const labelClasses = `input-field__label ${error ? 'input-field__label--error' : ''}`;
 
   const isPasswordField = type === 'password';
@@ -83,7 +84,7 @@ const InputField = ({
           {...props}
         />
       </div>
-      {error && error.trim() !== '' && (
+      {error && typeof error === 'string' && error.trim() !== '' && (
         <div className="input-field__error">
           {error}
         </div>
