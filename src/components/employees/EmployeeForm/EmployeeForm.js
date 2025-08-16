@@ -218,14 +218,9 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
     // Validate all fields
     const isNameValid = validateAllFields();
     const isPasswordValid = validatePasswordFields();
+    const isValid = isNameValid && isPasswordValid;
     
-    // Only proceed if all validations pass
-    if (!isNameValid || !isPasswordValid) {
-      setIsSubmitting(true);
-      return;
-    }
-    
-    // If we get here, all validations passed
+    // Always prepare the submission data
     const submissionData = { ...formData };
     
     // If password is empty, don't include it in the submission
@@ -233,7 +228,16 @@ const EmployeeForm = ({ employee, onSubmit, onCancel }) => {
       delete submissionData.password;
     }
     delete submissionData.confirmPassword; // Don't send confirmPassword to the server
-    onSubmit(submissionData);
+    
+    // Update submission state
+    setIsSubmitting(true);
+    
+    // Always call onSubmit with the validation status and data
+    // The parent component can decide how to handle invalid submissions
+    onSubmit({
+      ...submissionData,
+      isValid
+    });
   };
 
   return (

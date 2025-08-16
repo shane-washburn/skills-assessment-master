@@ -27,11 +27,26 @@ function App() {
     setIsModalOpen(false);
   };
 
-  const handleSubmit = (data) => {
-    console.log('Form submitted with data:', data);
-    // In a real app, you would make an API call here
-    alert('Employee information updated successfully!');
-    setIsModalOpen(false);
+  const handleSubmit = async (data) => {
+    if (data.isValid) {
+      try {
+        // In a real app, you would make an API call here
+        // const response = await fetch('/api/employees/update', {
+        //   method: 'POST',
+        //   headers: { 'Content-Type': 'application/json' },
+        //   body: JSON.stringify(data)
+        // });
+        // if (!response.ok) throw new Error('Failed to update employee');
+        
+        alert('Employee information updated successfully!');
+        setIsModalOpen(false);
+      } catch (error) {
+        console.error('Error updating employee:', error);
+        alert(`Error: ${error.message || 'Failed to update employee information. Please try again.'}`);
+      }
+    } else {
+      alert('Please fix the validation errors before submitting.');
+    }
   };
 
   return (
