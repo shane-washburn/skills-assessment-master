@@ -70,9 +70,9 @@ const EmployeeModal = ({ isOpen, onClose, employee, onSubmit }) => {
   // Handle form submission
   const handleSave = async (formValues) => {
     setHasSubmitted(true);
-    
     if (!formValues.__isValid) {
       // Show error for invalid form
+      alert('Employee information errored successfully!')
       return;
     }
     
