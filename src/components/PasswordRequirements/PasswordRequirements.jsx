@@ -11,7 +11,10 @@ const PasswordRequirements = ({ requirements }) => {
             key={index} 
             className={`password-requirements__item ${requirement.isValid ? 'password-requirements__item--valid' : ''}`}
           >
-            <Icon name={requirement.isValid ? 'circle-check-16x16' : 'circle-16x16'} />
+            <Icon 
+              name={requirement.isValid ? 'circle-check-16x16' : 'circle-16x16'}
+              className={`password-requirements__item-icon ${requirement.isValid ? 'password-requirements__item-icon--valid' : ''}`}
+            />
             <span>{requirement.text}</span>
           </li>
         ))}

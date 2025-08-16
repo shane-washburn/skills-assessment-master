@@ -11,16 +11,17 @@ export function vanillaIcon(iconName) {
 	`.trim();
 }
 
-export function Icon({name, style}) {
+export function Icon({name, className, style}) {
 	const [width, height] = getIconDimensions(name);
 	return (
 		<svg 
+      className={className}
       width={width} 
       height={height} 
       viewBox={`0 0 ${ width } ${ height }`}
       style={style}
     >
-			<use xlinkHref={ `/assets/sprite.svg#${ name }` } style={{ fill: style?.fill || 'currentColor' }} />
+			<use xlinkHref={ `/assets/sprite.svg#${ name }` } style={{ fill: 'currentColor' }} />
 		</svg>
 	);
 }
